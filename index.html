@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0"
+    />
+    <meta name="theme-color" content="#1a0a1f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <title>Для Раяны 💖</title>
+
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="lovesite.png" />
+    <link rel="icon" type="image/png" href="lovesite.png" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Marck+Script&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-theme="pink">
+    <!-- ============================================
+         ОТКРЫТКА-ОБЛОЖКА
+         ============================================ -->
+    <div class="envelope-screen" id="envelopeScreen">
+      <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="envelope">
+          <div class="envelope-flap"></div>
+          <div class="envelope-body">
+            <div class="envelope-heart">💖</div>
+          </div>
+          <div class="envelope-seal">R</div>
+        </div>
+        <p class="envelope-hint">Нажми, чтобы открыть</p>
+        <p class="envelope-for">Для Раяны💖</p>
+      </div>
+    </div>
+
+    <!-- ============================================
+         ОСНОВНОЙ САЙТ (скрыт до открытия)
+         ============================================ -->
+    <div class="site-content" id="siteContent">
+      <!-- Фон с сердечками -->
+      <div class="hearts-bg" id="heartsBg"></div>
+
+      <!-- Кнопка выбора темы -->
+      <button class="theme-btn" id="themeBtn" aria-label="Сменить тему">
+        🎨
+      </button>
+
+      <!-- Кнопка музыки -->
+      <button class="music-btn" id="musicBtn" aria-label="Включить музыку">
+        <span class="music-icon">🔊</span>
+      </button>
+
+      <audio id="bgMusic" loop preload="auto">
+        <source src="music/song.mp3" type="audio/mpeg" />
+        <source src="music/song.m4a" type="audio/mp4" />
+      </audio>
+
+      <!-- Основной контент -->
+      <main class="container">
+        <div class="heart-pulse">💖</div>
+        <h1 class="title">Раяна</h1>
+        <p class="subtitle">У меня есть кое-что важное сказать тебе...</p>
+
+        <div class="letter">
+          <p id="typedText"></p>
+          <span class="cursor" id="cursor">|</span>
+        </div>
+
+        <div class="gallery-block" id="galleryBlock">
+          <h2 class="gallery-title">Ты прекрасна ✨</h2>
+          <div class="gallery">
+            <div class="gallery-item">
+              <img src="photos/rayana1.jpg" alt="Наш момент 1" loading="lazy" />
+            </div>
+            <div class="gallery-item">
+              <img src="photos/rayana2.jpg" alt="Наш момент 2" loading="lazy" />
+            </div>
+            <div class="gallery-item">
+              <img src="photos/rayana3.jpg" alt="Наш момент 3" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+        <div class="answer-block" id="answerBlock">
+          <h2 class="answer-title">Что ты ответишь мне, Раяна?</h2>
+          <textarea
+            id="answerInput"
+            placeholder="Напиши свой ответ здесь... 💌"
+            rows="5"
+            autocorrect="off"
+            autocapitalize="sentences"
+            spellcheck="false"
+          ></textarea>
+          <button id="sendBtn" class="send-btn">Отправить 💕</button>
+          <p class="status" id="status"></p>
+        </div>
+      </main>
+
+      <!-- Лайтбокс -->
+      <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <img src="" alt="" id="lightboxImg" />
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

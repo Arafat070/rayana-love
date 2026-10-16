@@ -1,0 +1,1130 @@
+/* ============================================
+   БАЗА + СБРОС
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: linear-gradient(
+    135deg,
+    #1a0a1f 0%,
+    #2d0b3a 40%,
+    #4a0e3f 70%,
+    #6b1147 100%
+  );
+  background-attachment: fixed;
+  overflow-x: hidden;
+  font-family: "Cormorant Garamond", serif;
+  color: #fff;
+  position: relative;
+  transition: background 0.8s ease;
+}
+
+/* ============================================
+   ТЕМЫ
+   ============================================ */
+
+/* Розовая (по умолчанию) */
+body[data-theme="pink"] {
+  background: linear-gradient(
+    135deg,
+    #1a0a1f 0%,
+    #2d0b3a 40%,
+    #4a0e3f 70%,
+    #6b1147 100%
+  );
+}
+
+/* Красная / страстная */
+body[data-theme="red"] {
+  background: linear-gradient(
+    135deg,
+    #1a0000 0%,
+    #3d0000 40%,
+    #6b0a0a 70%,
+    #8b0000 100%
+  );
+}
+body[data-theme="red"] .title {
+  background: linear-gradient(45deg, #ff4444, #ff0000, #ff6666, #ff4444);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Фиолетовая / ночная */
+body[data-theme="purple"] {
+  background: linear-gradient(
+    135deg,
+    #0a001a 0%,
+    #1a0033 40%,
+    #2d0052 70%,
+    #3d006b 100%
+  );
+}
+body[data-theme="purple"] .title {
+  background: linear-gradient(45deg, #b366ff, #9933ff, #d9b3ff, #b366ff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================
+   ФОН С СЕРДЕЧКАМИ
+   ============================================ */
+.hearts-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floating-heart {
+  position: absolute;
+  bottom: -50px;
+  font-size: 24px;
+  opacity: 0.6;
+  animation: floatUp linear infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.8));
+  will-change: transform;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(360deg) scale(1.3);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   ВЕРХНИЕ КНОПКИ (тема + музыка)
+   ============================================ */
+.theme-btn,
+.music-btn {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 182, 193, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  box-shadow: 0 4px 20px rgba(255, 20, 147, 0.25);
+}
+
+.theme-btn {
+  right: max(16px, env(safe-area-inset-right));
+}
+
+.music-btn {
+  left: max(16px, env(safe-area-inset-left));
+  position: fixed;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+}
+
+.theme-btn:hover,
+.music-btn:hover {
+  background: rgba(255, 105, 180, 0.3);
+  transform: scale(1.1);
+}
+
+.theme-btn:active,
+.music-btn:active {
+  transform: scale(0.95);
+}
+
+/* Анимация играющей музыки */
+.music-btn.playing {
+  animation: musicPulse 1.5s ease-in-out infinite;
+}
+
+.music-btn.playing .music-icon {
+  animation: musicBounce 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes musicPulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 20px rgba(255, 20, 147, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 35px rgba(255, 20, 147, 0.9);
+  }
+}
+
+@keyframes musicBounce {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.25);
+  }
+}
+
+/* ============================================
+   КОНТЕЙНЕР
+   ============================================ */
+.container {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 80px 24px 40px;
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+/* ============================================
+   СЕРДЦЕ + ЗАГОЛОВОК
+   ============================================ */
+.heart-pulse {
+  font-size: 80px;
+  animation: pulse 1.5s ease-in-out infinite;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 25px rgba(255, 20, 147, 0.9));
+  display: inline-block;
+  line-height: 1;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.title {
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(3rem, 12vw, 6rem);
+  line-height: 1.1;
+  background: linear-gradient(45deg, #ff69b4, #ff1493, #ffb6c1, #ff69b4);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientMove 4s ease infinite;
+  margin-bottom: 10px;
+  padding: 0 6px;
+  transition: background 0.8s ease;
+}
+
+@keyframes gradientMove {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.subtitle {
+  font-family: "Marck Script", cursive;
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  color: #ffc0cb;
+  margin-bottom: 40px;
+  opacity: 0.9;
+  padding: 0 8px;
+}
+
+/* ============================================
+   ПИСЬМО
+   ============================================ */
+.letter {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 182, 193, 0.3);
+  border-radius: 24px;
+  padding: 40px 30px;
+  margin: 30px auto;
+  box-shadow:
+    0 0 60px rgba(255, 20, 147, 0.25),
+    inset 0 0 40px rgba(255, 105, 180, 0.05);
+  min-height: 200px;
+  position: relative;
+}
+
+.letter::before {
+  content: "❦";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+  color: #ff69b4;
+  background: linear-gradient(135deg, #1a0a1f, #2d0b3a);
+  padding: 0 15px;
+  border-radius: 50%;
+}
+
+#typedText {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.05rem, 4.3vw, 1.35rem);
+  line-height: 1.85;
+  color: #ffe4ef;
+  text-align: left;
+  white-space: pre-wrap;
+  font-style: italic;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.cursor {
+  color: #ff69b4;
+  font-size: 1.3rem;
+  animation: blink 0.8s infinite;
+  font-weight: bold;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   ГАЛЕРЕЯ
+   ============================================ */
+.gallery-block {
+  margin-top: 50px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 1s ease,
+    transform 1s ease;
+  pointer-events: none;
+}
+
+.gallery-block.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.gallery-title {
+  font-family: "Marck Script", cursive;
+  font-size: clamp(1.3rem, 5.5vw, 2rem);
+  color: #ffb6c1;
+  margin-bottom: 25px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  padding: 0 4px;
+}
+
+.gallery-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 2px solid rgba(255, 105, 180, 0.35);
+  box-shadow: 0 6px 25px rgba(255, 20, 147, 0.25);
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.gallery-item::after {
+  content: "💖";
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-size: 18px;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 6px rgba(255, 20, 147, 0.8));
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  display: block;
+}
+
+.gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(255, 20, 147, 0.55);
+  border-color: #ff69b4;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.08);
+}
+
+.gallery-item:hover::after {
+  transform: scale(1.3) rotate(-10deg);
+}
+
+/* ============================================
+   ЛАЙТБОКС (просмотр фото)
+   ============================================ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(10, 0, 15, 0.94);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  padding: 20px;
+}
+
+.lightbox.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox img {
+  max-width: 95%;
+  max-height: 90vh;
+  border-radius: 20px;
+  box-shadow: 0 0 80px rgba(255, 20, 147, 0.6);
+  border: 2px solid rgba(255, 105, 180, 0.5);
+  animation: zoomIn 0.4s ease;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.lightbox-close {
+  position: absolute;
+  top: max(20px, env(safe-area-inset-top));
+  right: max(20px, env(safe-area-inset-right));
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 32px;
+  line-height: 44px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid rgba(255, 182, 193, 0.35);
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+  user-select: none;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 105, 180, 0.35);
+  transform: rotate(90deg);
+}
+
+/* ============================================
+   БЛОК ОТВЕТА
+   ============================================ */
+.answer-block {
+  margin-top: 50px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 1s ease,
+    transform 1s ease;
+  pointer-events: none;
+}
+
+.answer-block.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.answer-title {
+  font-family: "Marck Script", cursive;
+  font-size: clamp(1.3rem, 5.5vw, 2rem);
+  color: #ffb6c1;
+  margin-bottom: 25px;
+  padding: 0 8px;
+}
+
+#answerInput {
+  width: 100%;
+  padding: 18px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 105, 180, 0.4);
+  border-radius: 18px;
+  resize: vertical;
+  min-height: 130px;
+  outline: none;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+  line-height: 1.6;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#answerInput:focus {
+  border-color: #ff69b4;
+  box-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+#answerInput::placeholder {
+  color: rgba(255, 192, 203, 0.6);
+  font-style: italic;
+}
+
+/* ============================================
+   КНОПКА ОТПРАВКИ
+   ============================================ */
+.send-btn {
+  margin-top: 20px;
+  padding: 16px 50px;
+  font-family: "Marck Script", cursive;
+  font-size: 1.4rem;
+  color: #fff;
+  background: linear-gradient(135deg, #ff1493, #ff69b4, #ff1493);
+  background-size: 200% 200%;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 8px 30px rgba(255, 20, 147, 0.5);
+  animation: gradientMove 3s ease infinite;
+  width: 100%;
+  max-width: 340px;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+}
+
+.send-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 40px rgba(255, 20, 147, 0.8);
+}
+
+.send-btn:active {
+  transform: scale(0.97);
+}
+
+.send-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.status {
+  margin-top: 18px;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(0.95rem, 4vw, 1.05rem);
+  color: #ffb6c1;
+  min-height: 24px;
+  padding: 0 8px;
+}
+
+/* ============================================
+   ПЛАНШЕТЫ И ТЕЛЕФОНЫ (до 768px)
+   ============================================ */
+@media (max-width: 768px) {
+  .container {
+    padding: 76px 18px 30px;
+  }
+
+  .heart-pulse {
+    font-size: 64px;
+    margin-bottom: 12px;
+  }
+  .subtitle {
+    margin-bottom: 28px;
+  }
+
+  .letter {
+    padding: 32px 22px;
+    border-radius: 20px;
+    margin: 24px auto;
+  }
+
+  .letter::before {
+    font-size: 24px;
+    top: -16px;
+    padding: 0 12px;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .answer-block,
+  .gallery-block {
+    margin-top: 36px;
+  }
+
+  .theme-btn,
+  .music-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+/* ============================================
+   ТЕЛЕФОНЫ (до 480px)
+   ============================================ */
+@media (max-width: 480px) {
+  .container {
+    padding: 72px 14px 24px;
+  }
+
+  .heart-pulse {
+    font-size: 52px;
+    margin-bottom: 8px;
+  }
+
+  .title {
+    font-size: clamp(2.6rem, 15vw, 3.6rem);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 22px;
+    line-height: 1.4;
+  }
+
+  .letter {
+    padding: 26px 18px;
+    border-radius: 18px;
+    margin: 20px auto;
+    min-height: 150px;
+  }
+
+  .letter::before {
+    font-size: 20px;
+    top: -14px;
+    padding: 0 10px;
+  }
+
+  #typedText {
+    font-size: 1.02rem;
+    line-height: 1.75;
+  }
+
+  .cursor {
+    font-size: 1.1rem;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .gallery-title,
+  .answer-title {
+    font-size: 1.35rem;
+    margin-bottom: 18px;
+  }
+
+  #answerInput {
+    padding: 15px;
+    border-radius: 14px;
+    min-height: 120px;
+    font-size: 16px;
+  }
+
+  .send-btn {
+    padding: 15px 30px;
+    font-size: 1.25rem;
+    border-radius: 40px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .status {
+    font-size: 0.95rem;
+  }
+
+  .theme-btn,
+  .music-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 17px;
+    top: max(12px, env(safe-area-inset-top));
+  }
+
+  .theme-btn {
+    right: max(12px, env(safe-area-inset-right));
+  }
+  .music-btn {
+    left: max(12px, env(safe-area-inset-left));
+  }
+}
+
+/* ============================================
+   ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (до 360px)
+   ============================================ */
+@media (max-width: 360px) {
+  .container {
+    padding: 68px 12px 20px;
+  }
+
+  .heart-pulse {
+    font-size: 44px;
+  }
+  .letter {
+    padding: 22px 15px;
+  }
+  #typedText {
+    font-size: 0.98rem;
+  }
+  .send-btn {
+    font-size: 1.15rem;
+    padding: 14px 24px;
+  }
+
+  .gallery {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .gallery-item {
+    border-radius: 14px;
+  }
+}
+
+/* ============================================
+   ЛАНДШАФТ НА ТЕЛЕФОНЕ
+   ============================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+  .container {
+    padding-top: 60px;
+  }
+  .heart-pulse {
+    font-size: 40px;
+    margin-bottom: 6px;
+  }
+  .title {
+    font-size: 2.4rem;
+  }
+  .subtitle {
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+  }
+}
+
+/* ============================================
+   ПОДДЕРЖКА prefers-reduced-motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .heart-pulse,
+  .floating-heart,
+  .title,
+  .send-btn,
+  .music-btn.playing {
+    animation: none !important;
+  }
+  .answer-block,
+  .gallery-block {
+    transition: none;
+  }
+}
+
+/* ============================================
+   ТАЧ-УСТРОЙСТВА
+   ============================================ */
+@media (hover: none) {
+  .send-btn:hover,
+  .gallery-item:hover,
+  .theme-btn:hover,
+  .music-btn:hover {
+    transform: none;
+  }
+  .gallery-item:hover img {
+    transform: none;
+  }
+}
+/* ============================================
+   ОТКРЫТКА-ОБЛОЖКА
+   ============================================ */
+.envelope-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: linear-gradient(
+    135deg,
+    #1a0a1f 0%,
+    #2d0b3a 40%,
+    #4a0e3f 70%,
+    #6b1147 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    opacity 1s ease,
+    visibility 1s ease;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.envelope-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 105, 180, 0.15) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.envelope-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.envelope-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  animation: floatIn 1.2s ease-out;
+  z-index: 2;
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Конверт */
+.envelope {
+  position: relative;
+  width: clamp(240px, 70vw, 340px);
+  aspect-ratio: 1.5 / 1;
+  animation: envelopeFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 20px 50px rgba(255, 20, 147, 0.5));
+}
+
+@keyframes envelopeFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+}
+
+.envelope-body {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #ff9ec7 0%, #ff69b4 50%, #ff1493 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 -20px 40px rgba(139, 0, 74, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.envelope-body::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: rgba(139, 0, 74, 0.25);
+  transform: translateY(-1px);
+  z-index: 1;
+}
+
+.envelope-body::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(to top, #ff1493, #ff69b4);
+  clip-path: polygon(0 100%, 0 0, 50% 55%, 100% 0, 100% 100%);
+  z-index: 2;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(160deg, #ffd1e3 0%, #ffb6d4 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-radius: 12px 12px 0 0;
+  z-index: 3;
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 0.9s ease;
+  box-shadow: 0 4px 15px rgba(139, 0, 74, 0.3);
+}
+
+.envelope-heart {
+  position: relative;
+  z-index: 5;
+  font-size: clamp(48px, 12vw, 72px);
+  animation: heartBeat 1.4s ease-in-out infinite;
+  filter: drop-shadow(0 4px 15px rgba(139, 0, 74, 0.6));
+  margin-top: 15%;
+}
+
+@keyframes heartBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.envelope-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff5f9, #ff1493 70%);
+  color: #fff;
+  font-family: "Great Vibes", cursive;
+  font-size: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 6px 20px rgba(139, 0, 74, 0.6),
+    inset 0 -3px 8px rgba(139, 0, 74, 0.4);
+  z-index: 6;
+  line-height: 1;
+  padding-bottom: 4px;
+}
+
+/* Подсказки под конвертом */
+.envelope-hint {
+  font-family: "Marck Script", cursive;
+  font-size: clamp(1.3rem, 5vw, 1.9rem);
+  color: #ffb6c1;
+  text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+  animation: hintPulse 1.8s ease-in-out infinite;
+  text-align: center;
+}
+
+@keyframes hintPulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.envelope-for {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(1rem, 4vw, 1.3rem);
+  color: rgba(255, 182, 193, 0.7);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: -10px;
+}
+
+/* ============================================
+   АНИМАЦИЯ РАСКРЫТИЯ
+   ============================================ */
+.envelope-wrapper.opening .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 0;
+}
+
+.envelope-wrapper.opening .envelope-heart {
+  animation: heartFlyOut 1.2s ease-out forwards;
+}
+
+@keyframes heartFlyOut {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-40px) scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-200px) scale(2);
+    opacity: 0;
+  }
+}
+
+.envelope-wrapper.opening .envelope {
+  animation: envelopeZoom 1s ease-in forwards;
+}
+
+@keyframes envelopeZoom {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+.envelope-wrapper.opening .envelope-hint,
+.envelope-wrapper.opening .envelope-for {
+  animation: fadeOutQuick 0.5s ease forwards;
+}
+
+@keyframes fadeOutQuick {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   ОСНОВНОЙ САЙТ (скрыт до открытия)
+   ============================================ */
+.site-content {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 1s ease 0.3s,
+    visibility 1s ease 0.3s;
+}
+
+.site-content.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================
+   АДАПТАЦИЯ ПОД ТЕЛЕФОН
+   ============================================ */
+@media (max-width: 480px) {
+  .envelope-wrapper {
+    gap: 22px;
+  }
+
+  .envelope-seal {
+    width: 48px;
+    height: 48px;
+    font-size: 28px;
+  }
+
+  .envelope-hint {
+    font-size: 1.25rem;
+  }
+
+  .envelope-for {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+  }
+}

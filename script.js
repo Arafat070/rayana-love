@@ -234,17 +234,35 @@ let musicPlaying = false;
 
 function startMusic() {
   if (musicPlaying) return;
-  bgMusic.volume = 0.4;
-  bgMusic
-    .play()
-    .then(() => {
-      musicBtn.classList.add("playing");
-      musicBtn.querySelector(".music-icon").textContent = "🔊";
-      musicPlaying = true;
-    })
-    .catch((err) => {
-      console.warn("Не удалось воспроизвести музыку:", err);
-    });
+
+  bgMusic.volume = 0.5;
+
+  // Пытаемся запустить
+  const playPromise = bgMusic.play();
+
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        // Успех!
+        musicBtn.classList.add("playing");
+        musicBtn.querySelector(".music-icon").textContent = "🔊";
+        musicPlaying = true;
+      })
+      .catch((error) => {
+        console.warn("Браузер заблокировал автоплей:", error);
+
+        // Если не получилось — принудительно грузим и пробуем ещё раз
+        bgMusic.load();
+        bgMusic
+          .play()
+          .then(() => {
+            musicPlaying = true;
+            musicBtn.classList.add("playing");
+            musicBtn.querySelector(".music-icon").textContent = "🔊";
+          })
+          .catch((e) => console.warn("Повторная попытка не удалась:", e));
+      });
+  }
 }
 
 musicBtn.addEventListener("click", (e) => {
@@ -267,7 +285,7 @@ let envelopeOpened = false;
 function openEnvelope() {
   if (envelopeOpened) return;
   envelopeOpened = true;
-
+  bgMusic.load();
   // 1. Запускаем музыку (пользователь кликнул — автоплей разрешён!)
   startMusic();
 
